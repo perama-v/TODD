@@ -59,7 +59,8 @@ publication is reached. The nature of the threshold will vary between databases.
 
 It is RECOMMENDED that the definition be defined similarly to the way new data is collected.
 Where there is a sequential nature to the data collection, this may be a good mechanism for
-determining a threshold. Where data is stored unordered,
+determining a threshold. Where data is stored unordered, it is RECOMMENDED
+that an articifial ordering used.
 
 For example:
 - Data is exclusively derived from new sequential mainnet blocks.
@@ -74,7 +75,7 @@ For example:
 - Data consists of contract metadata stored in a key-value database by address.
     - Define any ordering system for existing records (date added, lexicographically, ...)
     - Threshold every nth new addition.
-    - Example database: Sourcify repostory
+    - Example database: Sourcify repository
 
 The threshold `MAY` be subject to inter-observer disagreement. Two publishers may produce
 two different volumes and users may use either or both databases. Where agreement is required
