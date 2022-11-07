@@ -121,13 +121,89 @@ The Manifest MUST be JSON formatted document.
 The Manifest MUST have a "version" field, whose value is RECOMMENDED to represent the semantic
 version of the data structure.
 
-The Manifest MUST have a "schemas" field, whose value is RECOMMENDED to either represent the CID
-of the schema
-and/or protocols that define the data and its preparation and use.
+The Manifest MUST have a "schemas" field, whose value is a string that is RECOMMENDED to
+either represent the CID of the schema and/or protocols that define the data and its
+preparation and use. The value MAY instead be a string representing the schema itself.
+It is NOT RECOMMENDED that the value be a URL that may change.
 
 The Manifest MUST list all unique distributable database elements (see Flat Structure section).
 
-Each new manifests SHOULD be broadcast to peers and users.
+The Manifest MAY, for each unique distributable database element, included additional unique
+content identifiers. For example, in addition to an IPFS CID, a swarm hash and SSZ root hash
+may be included for each element.
+
+It is RECOMMENDED that when a new manifest is published, the CID of the manifest is broadcast
+to relevant parties. For example, the CID of the manifest could be announced to connected peers
+in a peer to peer network, or stored in smart contract that implements
+EIP-generic-attributable-manifest-broadcaster.
+
+### Interface Identifiers
+
+It is RECOMMENDED that the database schema specification (referred to in the "schemas" field of
+the Manifest) define an identifier schema for `Volumes` and, if present, `Chapters`.
+These identifiers allow data to be referred to via application programming interfaces (APIs).
+
+If defined, they SHOULD be referred to using the following terms:
+
+- `Volume`: "Volume identifier schema"
+- `Chapter`: "Chapter identifier schema"
+
+If defined, the schema SHOULD provide a regular expression for identifiers.
+
+Identifiers SHOULD be strings of the following general form:
+```
+"/^+[a-zA-Z0-9_-]$/"
+```
+That is schemas are limited to any combination of: letters, numbers, "_" and "-".
+
+Example schema for `Volumes` that are defined by block heights:
+```
+Volume identifier schema:
+
+Schema: "/^blocks-[0-9]{9}-[0-9]{9}$/"
+Example identifier: "blocks-001300000-001305432"
+```
+Example schema for `Volumes` that are defined by an incremental counter of new entries:
+```
+Volume identifier schema:
+
+Schema: "/^[0-9]{6}$/"
+Example identifier: "091233"
+```
+Example schema for `Chapters` that are defined by the first two hex characters of addresses:
+```
+Chapter identifier schema:
+
+Schema: "/^addresses_starting_0x[a-z0-9]{2}$/"
+Example identifier: "addresses_starting_0x3f"
+```
+Example schema for `Chapters` that are defined by the first hex character of a signature:
+```
+Chapter identifier schema:
+
+Schema: "/^[a-z0-9]{1}$/"
+Example identifier: "d"
+```
+
+For example, a API might define endpoints that use `Volume` and `Chapter` identifiers for a
+database that indexes the appearances of address inside transactions as follows:
+
+REST:
+```
+Example definition:
+protocol_xyz/v1/data/by_volume_and_chapter/{volume_id}/{chapter_id}
+
+Example call:
+protocol_xyz/v1/data/by_volume_and_chapter/blocks-001300000-001305432/addresses_starting_0x3f
+```
+JSON-RPC:
+```
+Example definition:
+eth_getAppearancesByVolumeChapter(volume_id, chapter_id)
+
+Example call:
+eth_getAppearancesByVolumeChapter("blocks-001300000-001305432", "addresses_starting_0x3f")
+```
 
 ### Flat structure
 
@@ -231,6 +307,10 @@ Note that in the absence of `Chapters`, a `Volume` is the smallest data unit.
   ]
 }
 ```
+The CID of this manifest is broadcast by storing it in the smart contract
+that implements EIP-generic-attributable-manifest-broadcaster, deployed on mainnet at
+`0x0c316b7042b419d07d343f2f4f5bd54ff731183d`:
+
 ### address-appearance-index
 The address-appearance-index comprises a database that records the transaction ids (block and
 index) for all addresses that appear during transaction execution.
