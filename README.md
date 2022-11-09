@@ -54,6 +54,9 @@ A compliant database:
 
 ### Volume definition
 
+A `Volume` is a collection of data that is constructed and published at a cadence
+using a `Volume` definition.
+
 A `Volume` definition MUST provide a clear protocol for deciding when a threshold for
 publication is reached. The nature of the threshold will vary between databases.
 
@@ -83,6 +86,9 @@ due to the nature of the data, social coordination may be required to decide a "
 volume to continue building upon.
 
 ### Chapter definition
+
+A `Chapter` is a collection of data that is constructed using a `Chapter` definition
+and is published as a part of a `Volume`.
 
 The following details apply to a databases that define `chapters`.
 
@@ -135,27 +141,33 @@ may be included for each element.
 It is RECOMMENDED that when a new manifest is published, the CID of the manifest is broadcast
 to relevant parties. For example, the CID of the manifest could be announced to connected peers
 in a peer to peer network, or stored in smart contract that implements
-EIP-generic-attributable-manifest-broadcaster.
+ERC-generic-attributable-manifest-broadcaster.
 
 ### Interface Identifiers
 
 It is RECOMMENDED that the database schema specification (referred to in the "schemas" field of
 the Manifest) define an identifier schema for `Volumes` and, if present, `Chapters`.
+
+Additionally, is RECOMMENDED that a database identifier be specified.
+
 These identifiers allow data to be referred to via application programming interfaces (APIs).
 
 If defined, they SHOULD be referred to using the following terms:
 
-- `Volume`: "Volume identifier schema"
-- `Chapter`: "Chapter identifier schema"
+- Database: "Database string identifier"
+- `Volume`: "Volume identifier string naming schema"
+- `Chapter`: "Chapter identifier string naming schema"
 
-If defined, the schema SHOULD provide a regular expression for identifiers.
-
-Identifiers SHOULD be strings of the following general form:
+An identifiers SHOULD be a string specified by regular expression of following general form:
 ```
 "/^+[a-zA-Z0-9_-]$/"
 ```
-That is schemas are limited to any combination of: letters, numbers, "_" and "-".
+That is, schemas should describe regular expressions that are limited to any combination of: letters, numbers, "_" and "-".
 
+Example database identifier for a database that manages mappings of strings to hex signatures:
+```
+Database string identifier: "4byte-directory"
+```
 Example schema for `Volumes` that are defined by block heights:
 ```
 Volume identifier schema:
@@ -185,24 +197,15 @@ Schema: "/^[a-z0-9]{1}$/"
 Example identifier: "d"
 ```
 
-For example, a API might define endpoints that use `Volume` and `Chapter` identifiers for a
+For example, a REST API might define endpoints that use `Volume` and `Chapter` identifiers for a
 database that indexes the appearances of address inside transactions as follows:
 
-REST:
 ```
 Example definition:
-protocol_xyz/v1/data/by_volume_and_chapter/{volume_id}/{chapter_id}
+{database_identifier}/v1/data/by_volume_and_chapter/{volume_id}/{chapter_id}
 
 Example call:
-protocol_xyz/v1/data/by_volume_and_chapter/blocks-001300000-001305432/addresses_starting_0x3f
-```
-JSON-RPC:
-```
-Example definition:
-eth_getAppearancesByVolumeChapter(volume_id, chapter_id)
-
-Example call:
-eth_getAppearancesByVolumeChapter("blocks-001300000-001305432", "addresses_starting_0x3f")
+address-appearance-index/v1/data/by_volume_and_chapter/blocks-001300000-001305432/addresses_starting_0x3f
 ```
 
 ### Flat structure
@@ -308,7 +311,7 @@ Note that in the absence of `Chapters`, a `Volume` is the smallest data unit.
 }
 ```
 The CID of this manifest is broadcast by storing it in the smart contract
-that implements EIP-generic-attributable-manifest-broadcaster, deployed on mainnet at
+that implements ERC-generic-attributable-manifest-broadcaster, deployed on mainnet at
 `0x0c316b7042b419d07d343f2f4f5bd54ff731183d`:
 
 ### address-appearance-index
@@ -321,7 +324,7 @@ hex characters.
 This corresponds to one ~500mb `Volume` published every ~2 weeks, comprising 256 ~2MB `Chapters`
 that may be individually obtained.
 
-Example manifest file. Files are nested but all CIDs are available:
+Example manifest file demonstration. Files are nested but all CIDs are available:
 ```
 {
   "version": "0.0.1",
