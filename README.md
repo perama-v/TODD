@@ -146,66 +146,69 @@ ERC-generic-attributable-manifest-broadcaster.
 ### Interface Identifiers
 
 It is RECOMMENDED that the database schema specification (referred to in the "schemas" field of
-the Manifest) define an identifier schema for `Volumes` and, if present, `Chapters`.
-
-Additionally, is RECOMMENDED that a database identifier be specified.
-
+the Manifest) define an identifier schema for the database, `Volumes` and, if present, `Chapters`.
 These identifiers allow data to be referred to via application programming interfaces (APIs).
 
-If defined, they SHOULD be referred to using the following terms:
+If defined, they SHOULD be defined in a section called: "Interface identifier string schemas",
+using the following terms:
 
-- Database: "Database string identifier"
-- `Volume`: "Volume identifier string naming schema"
-- `Chapter`: "Chapter identifier string naming schema"
+- database interface id
+- volume interface id
+- chapter interface id
 
-An identifiers SHOULD be a string specified by regular expression of following general form:
-```
-"/^+[a-zA-Z0-9_-]$/"
-```
-That is, schemas should describe regular expressions that are limited to any combination of: letters, numbers, "_" and "-".
-
-Example database identifier for a database that manages mappings of strings to hex signatures:
-```
-Database string identifier: "4byte-directory"
-```
-Example schema for `Volumes` that are defined by block heights:
-```
-Volume identifier schema:
-
-Schema: "/^blocks-[0-9]{9}-[0-9]{9}$/"
-Example identifier: "blocks-001300000-001305432"
-```
-Example schema for `Volumes` that are defined by an incremental counter of new entries:
-```
-Volume identifier schema:
-
-Schema: "/^[0-9]{6}$/"
-Example identifier: "091233"
-```
-Example schema for `Chapters` that are defined by the first two hex characters of addresses:
-```
-Chapter identifier schema:
-
-Schema: "/^addresses_starting_0x[a-z0-9]{2}$/"
-Example identifier: "addresses_starting_0x3f"
-```
-Example schema for `Chapters` that are defined by the first hex character of a signature:
-```
-Chapter identifier schema:
-
-Schema: "/^[a-z0-9]{1}$/"
-Example identifier: "d"
-```
-
-For example, a REST API might define endpoints that use `Volume` and `Chapter` identifiers for a
+The purpose of these identifiers is to enable interfaces to refer to the database and its components
+For example, a RESTful API might define an endpoint for a
 database that indexes the appearances of address inside transactions as follows:
 
 ```
 Example definition:
-{database_identifier}/v1/data/by_volume_and_chapter/{volume_id}/{chapter_id}
+{database_interface_id}/v1/data/by_volume_and_chapter/{volume_interface_id}/{chapter_interface_id}
 
 Example call:
-address-appearance-index/v1/data/by_volume_and_chapter/blocks-001300000-001305432/addresses_starting_0x3f
+address-appearance-index-mainnet/v1/data/by_volume_and_chapter/blocks-001300000-001305432/addresses_starting_0x3f
+```
+
+An identifier SHOULD be a string specified by regular expression of following general form:
+```
+"/^+[a-zA-Z0-9_-]$/"
+```
+That is, schemas should describe regular expressions that are limited to any combination of:
+letters, numbers, "_" and "-".
+
+Example database identifier for a database that manages mappings of strings to hex signatures:
+```
+Database interface id:
+"/^4byte-directory$/"
+
+Example: "4byte-directory"
+```
+Example schema for `Volumes` that are defined by block heights:
+```
+Volume interface id:
+"/^blocks-[0-9]{9}-[0-9]{9}$/"
+
+Example: "blocks-001300000-001305432"
+```
+Example schema for `Volumes` that are defined by an incremental counter of new entries:
+```
+Volume interface id:
+"/^[0-9]{6}$/"
+
+Example: "091233"
+```
+Example schema for `Chapters` that are defined by the first two hex characters of addresses:
+```
+Chapter interface id:
+"/^addresses_starting_0x[a-z0-9]{2}$/"
+
+Example: "addresses_starting_0x3f"
+```
+Example schema for `Chapters` that are defined by the first hex character of a signature:
+```
+Chapter interface id:
+"/^[a-z0-9]{1}$/"
+
+Example: "d"
 ```
 
 ### Flat structure
