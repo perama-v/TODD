@@ -27,7 +27,7 @@ Data is also broken into pieces that encourage users to host subsets of the whol
 Databases in the Ethereum ecosystem are often intended to be public goods. Yet it is
 a challenge to distribute a database that changes over time and it is often
 more helpful to end users if a single actor maintains a reliable, complete and up to
-date database. These services are often provided generously with free and scrapable APIs
+date database. These services are often provided generously with free and scrapeable APIs
 and public repositories.
 
 Two changes can make these databases more amenable to peer to peer distribution:
@@ -45,24 +45,41 @@ as described in RFC 2119 and RFC 8174.
 ### General Structure
 The database is defined by a schema with tunable parameters.
 
-It is released as discrete `Volumes` that come out at some cadence, and which after release
-do not change. `Volumes` contain `Chapters`, which represent a piece of data that is desirable
-for a particular user.
+The database consists of individually-accessible units called `Chapters`. Data within
+a `Chapter` share similar properties. `Chapters` are released as part of
+discrete `Volumes` that come out at some cadence. After a `Volume` is released, the data
+does not change.
 
-When a new `Volume` is released, two users may obtain different `Chapters`. Users will typically
-obtain the same chapter for each `Volume` that has even been published.
+`Chapters` consist of data that is easily recognisable as desirable for a particular user.
+When a new `Volume` is released, a user can ignore irrelevant `Chapters`. This provides
+a mechanism to shard the database across users. From a user's perpsective this
+is analgous to "subscribing" to a `Chapter` that is important to them.
+
+When a new `Volume` is released, two users may obtain different `Chapters`.
 
 A compliant database:
-- MUST define a time-based definition for `Volumes`
-- Is RECOMMENDED to define a user-focused definition for `Chapters`
+- MUST define a time-based definition for `Volumes` (how often new data comes out)
+- MUST define a user-focused definition for `Chapters` (what the difference between chapters is)
+
+A `Chapter` is the distributable unit of the database. It is defined by a
+unique `Volume`-`Chapter` pair. A `Chapter` contains data as key-value pairs
+where keys all match the `Chapter` definition and can be used by a user to obtain values.
+
+Fundamental to this idea is that a user starts with a query. They inspect the chapters
+they have obtained and obtain values that match the query. The combined result of
+the values from each chapter is the complete result of that query
 
 ### Volume definition
 
 A `Volume` is a collection of data that is constructed and published at a cadence
-using a `Volume` definition.
+using a `Volume` definition. A specific `Volume` is described by a specific `VolumeId`
+and consists of many individual discrete `Chapters`.
 
 A `Volume` definition MUST provide a clear protocol for deciding when a threshold for
 publication is reached. The nature of the threshold will vary between databases.
+
+A unique `VolumeId` MUST be specified for each `Volume`. For example, using bytes
+to represent a block range particular to that `Volume`. This is different to the the interface identifier string.
 
 It is RECOMMENDED that the definition be defined similarly to the way new data is collected.
 Where there is a sequential nature to the data collection, this may be a good mechanism for
@@ -91,13 +108,18 @@ volume to continue building upon.
 
 ### Chapter definition
 
-A `Chapter` is a collection of data that is constructed using a `Chapter` definition
-and is published as a part of a `Volume`.
+A `Chapter` is a collection of data `Records` that are constructed using a `Chapter` definition
+and is published as a part of a `Volume`. A specific chapter is described by a
+unique `VolumeId` and `ChapterId` pair.
 
 The following details apply to a databases that define `chapters`.
 
 A `Chapter` definition MUST be identifiable by knowledge that the end user posesses. They represent
 subsets of the data that they can obtain that is relevant to their needs.
+
+A unique `ChapterId` MUST be specified for each `Chapter`. For example, using bytes
+to represent a the hex characters common to all addresses particular to that `Chapter`.
+This is different to the the interface identifier string.
 
 It is RECOMMENDED that `Chapter` definitions are such that they divide the index
 into shards that are small enought for a user to host, but large enough
@@ -119,6 +141,40 @@ Some examples:
     is for CIDs that all start with the same base-58 character.
     - User obtains `chapter_Qm1`
     - Example database: Sourcify repostory
+
+### Records
+
+A `Chapter` consists of a collection of key-value pairs called `Records`.
+
+A `Record` MUST consist of `RecordKey`-`RecordValue` pairs.
+
+The format of a `Record` MUST be specified. For example a record for a specific
+database may consist of a key that is a string and a value that is a
+container of items conforming to some encoding.
+
+### RecordKeys
+
+A `Record` consists of a `RecordKey`-`RecordValue` pair.
+
+A `RecordKey` MUST represent a user query. For example: an Ethereum address may be a `RecordKey`
+if the user will use addresses to look up data.
+
+A key MUST conform to the defintion of a `Chapter`. For example: `chapter_0x12` consists of
+`RecordKey` that all start with `0x12...`.
+
+A `RecordKey` MUST NOT appear in a `Chapter` more than once.
+
+### RecordValues
+
+A `Record` consists of a `RecordKey`-`RecordValue` pair. Multiple `RecordValues` are
+aggregated to form the response to a user query.
+
+A `RecordValue` MAY be a collection of data. For example: The `RecordKey` `0x1234...acbd` may map to
+an array of transaction ids.
+
+A value in a `Chapter` MUST conform to the definition of the `Volume` that the `Chapter`
+belongs to. For example: If a `Volume` is defined by a block range,
+then a `RecordValue` must consist of transactions within that range.
 
 ### Manifest
 
