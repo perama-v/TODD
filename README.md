@@ -79,7 +79,8 @@ A `Volume` definition MUST provide a clear protocol for deciding when a threshol
 publication is reached. The nature of the threshold will vary between databases.
 
 A unique `VolumeId` MUST be specified for each `Volume`. For example, using bytes
-to represent a block range particular to that `Volume`. This is different to the the interface identifier string.
+to represent a block range particular to that `Volume`. This is different to the the interface
+identifier string.
 
 It is RECOMMENDED that the definition be defined similarly to the way new data is collected.
 Where there is a sequential nature to the data collection, this may be a good mechanism for
@@ -112,7 +113,7 @@ A `Chapter` is a collection of data `Records` that are constructed using a `Chap
 and is published as a part of a `Volume`. A specific chapter is described by a
 unique `VolumeId` and `ChapterId` pair.
 
-The following details apply to a databases that define `chapters`.
+The following details apply to a databases that define `Chapters`.
 
 A `Chapter` definition MUST be identifiable by knowledge that the end user posesses. They represent
 subsets of the data that they can obtain that is relevant to their needs.
@@ -122,7 +123,7 @@ to represent a the hex characters common to all addresses particular to that `Ch
 This is different to the the interface identifier string.
 
 It is RECOMMENDED that `Chapter` definitions are such that they divide the index
-into shards that are small enought for a user to host, but large enough
+into shards that are small enough for a user to host, but large enough
 such that the number of users required to host the complete database is achievable.
 
 Some examples:
@@ -141,6 +142,11 @@ Some examples:
     is for CIDs that all start with the same base-58 character.
     - User obtains `chapter_Qm1`
     - Example database: Sourcify repostory
+
+A `Chapter` definition MAY be broad enough to include all possible `Records`. This
+mean that a `Volume` only has one `Chapter`. This may be appropriate where a
+database is small enough to not warrant dividing into smaller pieces, or where a database
+has an alternative method for users to determine if a Chapter is desired (such as bloom filters).
 
 ### Records
 
@@ -179,7 +185,7 @@ then a `RecordValue` must consist of transactions within that range.
 ### Manifest
 
 When a new `Volume` is released, a manifest SHOULD be published. It consists of a complete record of
-every CID across all `Volumes` and `Chapters`. By obtaining a manifest from a publisher,
+the CID of every `Chapter`. By obtaining a manifest from a publisher,
 a user can quickly ascertain the CID of the data that is valuable to them.
 
 The Manifest MUST be JSON formatted document.
@@ -192,7 +198,7 @@ either represent the CID of the schema and/or protocols that define the data and
 preparation and use. The value MAY instead be a string representing the schema itself.
 It is NOT RECOMMENDED that the value be a URL that may change.
 
-The Manifest MUST list all unique distributable database elements (see Flat Structure section).
+The Manifest MUST list all chapters.
 
 The Manifest MAY, for each unique distributable database element, included additional unique
 content identifiers. For example, in addition to an IPFS CID, a swarm hash and SSZ root hash
@@ -206,7 +212,7 @@ ERC-generic-attributable-manifest-broadcaster.
 ### Interface Identifiers
 
 It is RECOMMENDED that the database schema specification (referred to in the "schemas" field of
-the Manifest) define an identifier schema for the database, `Volumes` and, if present, `Chapters`.
+the Manifest) define an identifier schema for the database, `Volumes` and `Chapters`.
 These identifiers allow data to be referred to via application programming interfaces (APIs).
 
 If defined, they SHOULD be defined in a section called: "Interface identifier string schemas",
@@ -331,18 +337,17 @@ The following are compliant reference implementations:
 The UnchainedIndex comprises an database that records the transaction ids (block and index)
 for all addresses that appear during transaction execution.
 - `Volumes` (known as "chunks") are published every `2_000_000` address appearances.
-- Does not define the `Chapter` definitions. Users obtain bloom filters to determine
-if the `Volumes`/"chunks" are of interest for their address.
+- Each `Volume` has a single `Chapter`. Users obtain bloom filters to determine
+if the `Chapters`/"chunks" are of interest for their address.
 
-This corresponds to one ~25MB indivisible `Volume` published every ~12 hours.
+This corresponds to one ~25MB indivisible `Chapter` published every ~12 hours.
 
 A snippet of a particular published manifest has the following form, with the required fields
 as follows:
 - "version" field: The version of the software used to create this instance of the database.
 - "schemas" field: An IPFS CID for the specification of the UnchainedIndex
-- `Volumes` are listed, each with their definition ("range" field) and CID ("indexHash" field).
+- `Chapter` are listed, each with their definition ("range" field) and CID ("indexHash" field).
 
-Note that in the absence of `Chapters`, a `Volume` is the smallest data unit.
 ```
 {
   "version": "trueblocks-core@v0.40.0",
