@@ -15,6 +15,28 @@ requires (*optional): <EIP number(s)>
 It is not clear that the concept is suited for an EIP. If that changes, I'll update this
 comment.
 
+  - [Abstract](#abstract)
+  - [Motivation](#motivation)
+  - [Specification](#specification)
+    - [General Structure](#general-structure)
+    - [Volume definition](#volume-definition)
+    - [Chapter definition](#chapter-definition)
+    - [Records](#records)
+    - [RecordKeys](#recordkeys)
+    - [RecordValues](#recordvalues)
+    - [Manifest](#manifest)
+    - [Interface Identifiers](#interface-identifiers)
+    - [Flat structure](#flat-structure)
+  - [Rationale](#rationale)
+  - [Reference Implementation](#reference-implementation)
+    - [UnchainedIndex](#unchainedindex)
+    - [address-appearance-index](#address-appearance-index)
+  - [Parameter Choices](#parameter-choices)
+    - [Design space](#design-space)
+    - [Example parameter selection](#example-parameter-selection)
+  - [Security Considerations](#security-considerations)
+  - [Copyright](#copyright)
+
 ## Abstract
 
 A format for a database comprising time-ordered dependent chunks that
