@@ -437,6 +437,58 @@ Example manifest file demonstration. Files are nested but all CIDs are available
   ]
 }
 ```
+## Parameter Choices
+
+### Design space
+The definition of a `Chapter` determines how much the database will be split. If chosen
+well, the database will naturally have a high replication number `R` amongst peers despite
+having a low disk footprint for each peer.
+
+|-|100 users|1000 users| 10000 users|
+|-|-|-|-|
+|0.01% of data|R0.01|R0.1|R1|
+|0.1% of data|R0.1|R1|R10|
+|1% of data|R1|R10|R100|
+|10% of data|R10|R100|R1000|
+
+Table 1: Replication factor `R`, where `R2` indicates that every piece of data in the database has two copies. Any `R<1` indicates that the data is not sufficiently represented in the network. A high `R` makes the data more available and resistant to loss.
+
+It must be noted that a user only contributes to the `R` value if they are actively
+participating in peer-to-peer sharing.
+
+A consideration for some databases is that single user may want multiple `Chapters`.
+Below is the effect on percentage of database obtained by the `Chapter` definition and
+`Chapter count per user.
+
+|-|1 `Chapter` per user|10 `Chapters` per user|100 `Chapters` per user|
+|-|-|-|-|
+|16^1 = 16 `Chapters` (0x0-0xf) |6.3% downloaded|63%|630%|
+|16^2 = 256 `Chapters` (0x00-0xff) |0.39%|3.9%|39%|
+|16^3 = 4096 `Chapters` (0x000-0xfff) |0.024%|0.24%|2.4%|
+|16^4 = 65,536 `Chapters` (0x0000-0xffff) |0.0015%|0.015%|0.15%|
+
+Table 2: Percentage of the entire database that a single user obtains when they get every
+`Chapter` relevant to them. `Chapters` are defined by a different number of
+leading hexadecimal characters (resulting in the number of `Chapters` being a function of hexadecimal orders of magnitude), but other definitions could be used.
+
+### Example parameter selection
+
+By starting with the known parameters for a particular database, the number of `Chapters`
+can be deduced.
+
+For example, consider a database of indexed addresseses that a wallet user will acquire
+part of. `Chapters` are defined by the addresses they contain.
+
+Supppose the following:
+- An estimated 1000 users
+- A target replication factor of `R10`
+
+Using the Table 1, this results in a user needing to obtain a minimum of 1% of the data to effectively
+support the network.
+
+If a user has on average ~10 wallet addresses (10 `Chapters` per user), then Table 2 results
+in a choice of 3.9% per user, equating to 256 `Chapters`. Hence `Chapters` should be defined
+as having addresses that have the first two hex characters in common (0x00-0xff).
 
 ## Security Considerations
 
