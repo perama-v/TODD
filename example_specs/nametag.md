@@ -238,9 +238,9 @@ nametags
 ### Volume interface id
 
 The number of the first nametag in the volume.
-`VolumeInterfaceId`: "/^nametags_from_[0-9]{9}$/"
+`VolumeInterfaceId`: "/^nametags_from(_[0-9]{3}){3}$/"
 ```
-nametags_from_000630000
+nametags_from_000_630_000
 ```
 
 
