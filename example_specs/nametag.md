@@ -86,7 +86,7 @@ No doctesting is applied and functions are not likely to be executable.
 
 | Name | Value | Description |
 | - | - | - |
-| `ADDRESS_CHARS_SIMILARITY_DEPTH` | `uint32(1)` | A parameter for the number of identical characters that two similar addresses share in hexadecimal representation. If the value is `1`, address`0xabcd...1234` will be evaluated for similarity using the first character `0xa`.
+| `ADDRESS_CHARS_SIMILARITY_DEPTH` | `uint32(2)` | A parameter for the number of identical characters that two similar addresses share in hexadecimal representation. If the value is `2`, address`0xabcd...1234` will be evaluated for similarity using the characters `0xab`.
 | `NAMETAGS_PER_VOLUME` | `uint32(10*3)` (1000) | Number of nametags in a `Volume` |
 
 ### Fixed-size type parameters
@@ -203,24 +203,24 @@ Example:
   "schemas": "url.todo",
   "chapters": [
     {
-      "volume": "nametags_from_000000000",
-      "chapter": "addresses_0xa",
+      "volume": "nametags_from_000_000_000",
+      "chapter": "addresses_0x00",
       "CID": "Qm1234...wxyz"
     },
     {
-      "volume": "nametags_from_000000000",
-      "chapter": "addresses_0xb",
+      "volume": "nametags_from_000_000_000",
+      "chapter": "addresses_0x01",
       "CID": "Qm1234...wxyz"
     },
     ...
     {
-      "volume": "nametags_from_000750000",
-      "chapter": "addresses_0xe",
+      "volume": "nametags_from_000_750_000",
+      "chapter": "addresses_0xfe",
       "CID": "Qm1234...wxyz"
     },
     {
-      "volume": "nametags_from_000750000",
-      "chapter": "addresses_0xf",
+      "volume": "nametags_from_000_750_000",
+      "chapter": "addresses_0xff",
       "CID": "Qm1234...wxyz"
     },
   ]
@@ -246,7 +246,7 @@ nametags_from_000_630_000
 
 ### Chapter interface id
 
-`ChapterInterfaceId`: "/^addresses_0x[a-z0-9]{1}$/"
+`ChapterInterfaceId`: "/^addresses_0x[a-z0-9]{2}$/"
 ```
-addresses_0xa
+addresses_0xac
 ```
