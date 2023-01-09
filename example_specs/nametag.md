@@ -166,7 +166,8 @@ class Record(Container):
 
 `RecordKey` definition:
 ```python
-RecordKey: ByteVector[BYTES_FOR_ADDRESS_CHARS]
+class RecordKey(Container):
+    key: ByteVector[BYTES_FOR_ADDRESS_CHARS]
 ```
 
 ### `RecordValues`
@@ -175,7 +176,7 @@ RecordKey: ByteVector[BYTES_FOR_ADDRESS_CHARS]
 ```python
 class RecordValue(Container):
     names: List[Name, MAX_NAMES_PER_RECORD]
-    names: List[Tag, MAX_TAGS_PER_RECORD]
+    tags: List[Tag, MAX_TAGS_PER_RECORD]
 ```
 
 Name definition:
