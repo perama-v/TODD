@@ -181,11 +181,11 @@ class RecordValue(Container):
 
 Name definition:
 ```python
-Name: List[MAX_BYTES_PER_NAME]
+Name: List[u8, MAX_BYTES_PER_NAME]
 ```
 Tag definition:
 ```python
-Tag: List[MAX_BYTES_PER_TAG]
+Tag: List[u8, MAX_BYTES_PER_TAG]
 ```
 
 ## Manifest
