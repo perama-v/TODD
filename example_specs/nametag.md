@@ -87,7 +87,7 @@ No doctesting is applied and functions are not likely to be executable.
 | Name | Value | Description |
 | - | - | - |
 | `ADDRESS_CHARS_SIMILARITY_DEPTH` | `uint32(1)` | A parameter for the number of identical characters that two similar addresses share in hexadecimal representation. If the value is `1`, address`0xabcd...1234` will be evaluated for similarity using the first character `0xa`.
-| `NAMETAGS_PER_VOLUME` | `uint32(10*4)` (10_000) | Number of nametags in a `Volume` |
+| `NAMETAGS_PER_VOLUME` | `uint32(10*3)` (1000) | Number of nametags in a `Volume` |
 
 ### Fixed-size type parameters
 
@@ -114,7 +114,7 @@ Constants derived from [design parameters](#design-parameters).
 | Name | Value | Description |
 | - | - | - |
 | `BYTES_FOR_ADDRESS_CHARS` | `uint32((ADDRESS_CHARS_SIMILARITY_DEPTH + 1) // 2)` (=1) | The number of bytes needed to represent the `ADDRESS_CHARS_SIMILARITY_DEPTH` characters. E.g., 1 or 2 chars is 1 byte, 3 or 4 chars is 2 bytes|
-| `MAX_RECORDS_PER_CHAPTER` | `uint32(10_000)` | Ceiling on number of `Records` per `Chaper`. Equal to `NAMETAGS_PER_VOLUME` (all nametags may be in one chapter). |
+| `MAX_RECORDS_PER_CHAPTER` | `uint32(1000)` | Ceiling on number of `Records` per `Chaper`. Equal to `NAMETAGS_PER_VOLUME` (all nametags may be in one chapter). |
 
 ## Definitions
 
@@ -134,7 +134,7 @@ Cadence: A `Volume` MAY be published when it contains exactly `NAMETAGS_PER_VOLU
 `VolumeId`: The number of the first nametag in the volume. The database consists of
 nametags (`RecordValues`) that are appended and given an incremental counter. Thus, a
 Volume with a `VolumeId` of `740_000` starts with the `740_000`-th nametag, and ends with
-the `740_000 + NAMETAGS_PER_VOLUME - 1`-th nametag. E.g., [740_000, 749_999] inclusive.
+the `740_000 + NAMETAGS_PER_VOLUME - 1`-th nametag. E.g., [740_999, 740_999] inclusive.
 
 ```python
 VolumeId: uint32
