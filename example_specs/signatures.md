@@ -203,23 +203,23 @@ Example:
   "schemas": "url.todo",
   "chapters": [
     {
-      "volume": "signatures_from_000_000_000",
+      "volume": "mappings_starting_000_000_000",
       "chapter": "signatures_0x00",
       "CID": "Qm1234...wxyz"
     },
     {
-      "volume": "signatures_from_000_000_000",
+      "volume": "mappings_starting_000_000_000",
       "chapter": "signatures_0x01",
       "CID": "Qm1234...wxyz"
     },
     ...
     {
-      "volume": "signatures_from_000_750_000",
+      "volume": "mappings_starting_000_750_000",
       "chapter": "signatures_0xfe",
       "CID": "Qm1234...wxyz"
     },
     {
-      "volume": "signatures_from_000_750_000",
+      "volume": "mappings_starting_000_750_000",
       "chapter": "signatures_0xff",
       "CID": "Qm1234...wxyz"
     },
@@ -238,9 +238,9 @@ signatures
 ### Volume interface id
 
 The number of the first signature in the volume.
-`VolumeInterfaceId`: "/^signatures_from(_[0-9]{3}){3}$/"
+`VolumeInterfaceId`: "/^mappings_starting(_[0-9]{3}){3}$/"
 ```
-signatures_from_000_630_000
+mappings_starting_000_630_000
 ```
 
 
