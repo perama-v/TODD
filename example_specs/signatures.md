@@ -106,7 +106,7 @@ Helper values for SSZ operations. SSZ variable-size elements require a maximum l
 | Name | Value | Description |
 | - | - | - |
 | `MAX_TEXTS_PER_RECORD` | `uint(2**8)` (=256) | Max number of texts within a single `RecordValue`|
-| `MAX_BYTES_PER_TEXT` | `uint32(2**5)` (=32) | Maximum bytes allowed for a single text. |
+| `MAX_BYTES_PER_TEXT` | `uint32(2**8)` (=256) | Maximum bytes allowed for a single text. |
 
 ### Derived
 
