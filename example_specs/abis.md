@@ -3,7 +3,7 @@
 
 ## Abstract
 
-A specification for a Time Ordered Distributable Database (TODD)-compliant for mapping
+A specification for a Time Ordered Distributable Database (TODD)-compliant for abi
 Ethereum addresses to ABIs.
 
 ## Motivation
@@ -128,7 +128,7 @@ Helper values for SSZ operations. SSZ variable-size elements require a maximum l
 | Name | Value | Description |
 | - | - | - |
 | `MAX_TEXTS_PER_RECORD` | `uint(2**8)` (=256) | Max number of texts within a single `RecordValue`|
-| `MAX_BYTES_PER_TEXT` | `uint32(2**8)` (=256) | Maximum bytes allowed for a single text. |
+| `MAX_BYTES_PER_ABI` | `uint32(2**8)` (=256) | Maximum bytes allowed for a single ABI. |
 
 ### Derived
 
@@ -201,12 +201,7 @@ class RecordKey(Container):
 `RecordValue` container definition:
 ```python
 class RecordValue(Container):
-    texts: List[Text, MAX_TEXTS_PER_RECORD]
-```
-
-Text definition:
-```python
-Text: List[u8, MAX_BYTES_PER_TEXT]
+    abi: List[u8, MAX_BYTES_PER_ABI]
 ```
 
 ## Manifest
@@ -225,24 +220,24 @@ Example:
   "schemas": "url.todo",
   "chapters": [
     {
-      "volume": "mappings_starting_000_000_000",
-      "chapter": "abis_0x00",
+      "volume": "abis_from_000_000_000",
+      "chapter": "addresses_0x00",
       "CID": "Qm1234...wxyz"
     },
     {
-      "volume": "mappings_starting_000_000_000",
-      "chapter": "abis_0x01",
+      "volume": "abis_from_000_000_000",
+      "chapter": "addresses_0x01",
       "CID": "Qm1234...wxyz"
     },
     ...
     {
-      "volume": "mappings_starting_000_750_000",
-      "chapter": "abis_0xfe",
+      "volume": "abis_from_000_750_000",
+      "chapter": "addresses_0xfe",
       "CID": "Qm1234...wxyz"
     },
     {
-      "volume": "mappings_starting_000_750_000",
-      "chapter": "abis_0xff",
+      "volume": "abis_from_000_750_000",
+      "chapter": "addresses_0xff",
       "CID": "Qm1234...wxyz"
     },
   ]
@@ -260,15 +255,15 @@ abis
 ### Volume interface id
 
 The number of the first ABI in the volume.
-`VolumeInterfaceId`: "/^mappings_starting(_[0-9]{3}){3}$/"
+`VolumeInterfaceId`: "/^abis_from(_[0-9]{3}){3}$/"
 ```
-mappings_starting_000_630_000
+abis_from_000_630_000
 ```
 
 
 ### Chapter interface id
 
-`ChapterInterfaceId`: "/^abis_0x[a-z0-9]{2}$/"
+`ChapterInterfaceId`: "/^addresses_0x[a-z0-9]{2}$/"
 ```
-abis_0xac
+addresses_0xac
 ```
